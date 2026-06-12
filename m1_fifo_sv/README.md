@@ -23,7 +23,11 @@ run.bat        :: svcheck --no-uvm 로 전체 컴파일 (TB 채울 때마다 통
 ```
 실행(시뮬)은 Layer 2(Vivado xsim/회사 VCS) 정해지면 추가.
 
+## 설계 결정 (확정 2026-06-12)
+- **A. reset:** synchronous, active-low (`rst_n`)
+- **B. full/empty 시 write/read:** 무시(drop) — overflow/underflow 에러 안 냄
+- **C. read 타이밍:** **FWFT** — !empty면 head가 항상 `dout`에 노출, `rd_en`은 pop만
+
 ## 진행
-- [x] DUT 초안 (sync_fifo.sv) — svcheck PASS
-- [ ] DUT 설계 결정 Nick 확정 (reset/drop/read 타이밍)
-- [ ] interface → transaction → ... → top (하나씩, 매번 svcheck)
+- [x] DUT (sync_fifo.sv, FWFT) — svcheck PASS
+- [ ] interface → transaction → generator → driver → monitor → scoreboard → env → top (하나씩, 매번 svcheck)

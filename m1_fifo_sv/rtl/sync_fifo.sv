@@ -44,11 +44,10 @@ module sync_fifo #(
     end
   end
 
-  // ★DECISION C: "standard synchronous read" — rd_en 친 다음 클럭에 dout 유효 (registered).
-  //   (대안: first-word-fall-through(FWFT) = empty 아니면 head가 항상 dout에 보임)
-  always_ff @(posedge clk) begin
-    if (do_rd) dout <= mem[rd_ptr[AW-1:0]];
-  end
+  // ★DECISION C: first-word-fall-through (FWFT) — Nick 선택(2026-06-12).
+  //   empty가 아니면 head(mem[rd_ptr])가 항상 dout에 보인다. rd_en은 pop(rd_ptr 전진)만.
+  //   dout 유효 조건 = !empty. (combinational head read — 시뮬/학습용 FWFT 모델)
+  assign dout = mem[rd_ptr[AW-1:0]];
 
   assign full  = (wr_ptr[AW] != rd_ptr[AW]) &&
                  (wr_ptr[AW-1:0] == rd_ptr[AW-1:0]);
