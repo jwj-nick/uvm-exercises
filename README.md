@@ -1,3 +1,4 @@
+<!-- filename: README.md · created 2026-06-11 -->
 # uvm-exercises
 
 > 🚧 **Building in public** — 집에서, 상용 EDA 없이 UVM을 실습하기 위한 예제 + 도구 모음.
