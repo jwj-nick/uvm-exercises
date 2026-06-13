@@ -11,14 +11,21 @@ interface fifo_if #(parameter int WIDTH = 8) (input logic clk);
   logic             full;
   logic             empty;
 
-  // TB 관점 clocking block — driver는 출력 구동, monitor는 입력 샘플
+  // driver 관점 clocking — TB가 자극 구동, 상태 샘플
   clocking cb @(posedge clk);
     default input #1step output #0;
     output rst_n, wr_en, din, rd_en;
     input  dout, full, empty;
   endclocking
 
+  // monitor 관점 clocking — 모든 신호를 입력으로 샘플(관측 전용)
+  clocking mon_cb @(posedge clk);
+    default input #1step;
+    input rst_n, wr_en, din, rd_en, dout, full, empty;
+  endclocking
+
   modport tb  (clocking cb);
+  modport mon (clocking mon_cb);
   modport dut (input  clk, rst_n, wr_en, din, rd_en,
                output dout, full, empty);
 endinterface
